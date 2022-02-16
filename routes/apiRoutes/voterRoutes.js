@@ -107,4 +107,24 @@ router.delete('/voters/:id', (req,res) => {
     });
 });
 
+//get vote count for each candidate
+router.get('/votes', (req,res) => {
+    const sql = `SELECT candidates.*, voters.candidate_id
+                FROM candidates
+                LEFT JOIN voters
+                ON candidates.id = voters.candidate_id`;
+    const params = [req.params.id];
+
+    db.query(sql, params, (err, row) => {
+        if (err) {
+            res.status(400).json({error: err.message });
+            return;
+        }
+        res.json({
+            message: 'success',
+            data: row
+        });
+    });
+});
+
 module.exports = router;
